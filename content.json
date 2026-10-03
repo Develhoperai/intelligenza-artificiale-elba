@@ -1,0 +1,166 @@
+{
+  "site": {
+    "brand_name": "Intelligenza Artificiale Elba",
+    "tagline": "Formazione AI per le imprese dell’Elba",
+    "headline": "Il lavoro non finisce. La giornata, sì.",
+    "intro": "Messaggi da riscrivere, documenti da ricopiare, informazioni da rincorrere. Partiamo dalla formazione per capire dove l’AI può aiutare davvero la tua impresa. Qui, all’Elba.",
+    "services": [
+      {
+        "slug": "prenotazioni-ristoranti-attivita-ricettive",
+        "title": "Prenotazioni senza errori",
+        "audience": "Ristoratori e attività ricettive che gestiscono prenotazioni via telefono, email o messaggi.",
+        "problem": "Ogni giorno ricevi richieste di prenotazione via telefono, email o messaggi. Rispondere è ripetitivo, ma sbagliare un orario o una disponibilità può costare caro.",
+        "solution": "Nel laboratorio impari a preparare risposte chiare e verificate per le richieste di prenotazione, usando un metodo che puoi ripetere. Il progetto individuale, se necessario, prepara un sistema per gestire le richieste in modo ordinato, ma non è un'integrazione già operativa.",
+        "deliverables": [
+          "Scheda di lavoro per individuare le richieste ripetitive",
+          "Esempio di risposta verificata per una prenotazione",
+          "Checklist per controllare errori e informazioni mancanti"
+        ],
+        "headline": "Prenotazioni senza doppioni e risposte pronte"
+      },
+      {
+        "slug": "risposte-ai-clienti-negozi",
+        "title": "Risposte ai clienti senza ripetere",
+        "audience": "Negozi e attività commerciali che rispondono a domande su orari, prezzi e disponibilità.",
+        "problem": "Clienti e fornitori ti chiedono sempre le stesse cose: orari, prezzi, disponibilità. Rispondere è ripetitivo e distoglie dal lavoro importante.",
+        "solution": "Il laboratorio ti insegna a preparare risposte chiare e verificate per le domande frequenti, con un metodo che puoi usare ogni giorno. Il progetto individuale, se richiesto, prepara un sistema per gestire le richieste, ma non è un'integrazione già operativa.",
+        "deliverables": [
+          "Esempio di risposta per domande frequenti",
+          "Guida per verificare le informazioni fornite",
+          "Scheda per raccogliere le domande più comuni"
+        ],
+        "headline": "Risposte pronte per le domande di sempre"
+      },
+      {
+        "slug": "preventivi-documenti-artigiani",
+        "title": "Documenti senza errori",
+        "audience": "Artigiani e piccole imprese che preparano preventivi e documenti a mano.",
+        "problem": "Preparare preventivi e documenti richiede tempo e attenzione: ricopiare dati a mano è noioso e soggetto a errori.",
+        "solution": "Nel laboratorio impari a ricopiare documenti in modo accurato, verificando che le informazioni siano corrette. Il progetto individuale, se necessario, prepara un sistema per automatizzare la compilazione, ma non è un'integrazione già operativa.",
+        "deliverables": [
+          "Esempio di preventivo ricopiato con l'AI",
+          "Checklist per controllare la fedeltà dei dati",
+          "Scheda per organizzare i documenti da ricopiare"
+        ],
+        "headline": "Preventivi e documenti senza ricopiare a mano"
+      },
+      {
+        "slug": "richieste-informazioni-strutture-ricettive",
+        "title": "Richieste di informazioni senza stress",
+        "audience": "Strutture ricettive che gestiscono richieste di informazioni e disponibilità.",
+        "problem": "Ogni giorno ricevi richieste di disponibilità e informazioni: rispondere è ripetitivo e rischi di dimenticare dettagli importanti.",
+        "solution": "Il laboratorio ti insegna a preparare risposte chiare e verificate per le richieste di informazioni, con un metodo che puoi ripetere. Il progetto individuale, se richiesto, prepara un sistema per gestire le richieste, ma non è un'integrazione già operativa.",
+        "deliverables": [
+          "Esempio di risposta per richieste di disponibilità",
+          "Guida per verificare le informazioni",
+          "Scheda per raccogliere le domande frequenti"
+        ],
+        "headline": "Risposte pronte per chi ti scrive"
+      },
+      {
+        "slug": "ordini-forniture-attivita",
+        "title": "Ordini senza errori",
+        "audience": "Attività che gestiscono ordini e forniture, con documenti da compilare e verificare.",
+        "problem": "Gestire ordini e forniture richiede di ricopiare dati da un documento all'altro: un errore può causare ritardi o problemi con i fornitori.",
+        "solution": "Nel laboratorio impari a ricopiare ordini in modo accurato, verificando che i dati siano corretti. Il progetto individuale, se necessario, prepara un sistema per automatizzare la gestione, ma non è un'integrazione già operativa.",
+        "deliverables": [
+          "Esempio di ordine ricopiato con l'AI",
+          "Checklist per controllare i dati",
+          "Scheda per organizzare gli ordini"
+        ],
+        "headline": "Ordini e forniture senza errori di trascrizione"
+      },
+      {
+        "slug": "documenti-fiscali-amministrativi",
+        "title": "Documenti fiscali senza errori",
+        "audience": "Attività che gestiscono documenti fiscali e amministrativi, con dati da ricopiare e verificare.",
+        "problem": "Ricopiare dati fiscali e amministrativi è delicato: un errore può avere conseguenze serie. Il lavoro è ripetitivo e richiede attenzione costante.",
+        "solution": "Il laboratorio ti insegna a ricopiare documenti fiscali in modo accurato, verificando ogni dato. Il progetto individuale, se richiesto, prepara un sistema per automatizzare la compilazione, ma non è un'integrazione già operativa.",
+        "deliverables": [
+          "Esempio di documento fiscale ricopiato con l'AI",
+          "Guida per verificare la correttezza dei dati",
+          "Scheda per organizzare i documenti"
+        ],
+        "headline": "Documenti fiscali senza errori di trascrizione"
+      }
+    ],
+    "process": [
+      "Incontro introduttivo: individua il lavoro ripetitivo che ti ruba tempo",
+      "Laboratorio mirato: risolvi un problema concreto con un metodo verificabile",
+      "Progetto individuale: solo se necessario, per chi ha un processo da migliorare"
+    ],
+    "about": "L’AI diventa utile quando entra nel lavoro di ogni giorno: una richiesta da gestire, un documento da preparare, un’informazione da trovare. Intelligenza Artificiale Elba affianca titolari e team con incontri e laboratori pratici sull’isola. Si parte da un’attività concreta, si prova un metodo e si impara a verificarlo. Quando serve, il passo successivo è un progetto costruito sul processo della tua impresa.",
+    "call_to_action": "Scopri il primo incontro",
+    "assumptions": [
+      "Nessun evento, data, sede, tariffa o partecipante è confermato: tutto è proposto.",
+      "Il dominio intelligenzaartificialeelba.it non è ancora dichiarato registrato; il sito attuale resta elba.futuristik.it/azienda.",
+      "La foto formativa fornita dal CEO è una base visiva, non la prova di un evento svolto.",
+      "I contenuti e i programmi sono bozze da validare con il titolare prima di qualsiasi pubblicazione o impegno.",
+      "Il contatto autorizzato è solo il telefono del titolare: 340 2788830.",
+      "Il budget AI complessivo è condiviso e limitato: obiettivo 2 EUR, tetto permanente 5 EUR, mai per singola richiesta.",
+      "Le operazioni descritte corrispondono esattamente alle funzioni degli strumenti nativi disponibili, senza funzionalità aggiuntive.",
+      "La ricerca di mercato non è stata eseguita; le affermazioni sul territorio si basano solo sulle fonti verificate citate."
+    ],
+    "entry_strategy": "education-events",
+    "education": [
+      {
+        "title": "Incontro introduttivo: individua il lavoro ripetitivo",
+        "audience": "Titolari e team di attività dell'Elba che vogliono capire dove l'AI può aiutare davvero, partendo dal lavoro ripetitivo di ogni giorno.",
+        "problem": "Ogni giorno ripeti le stesse operazioni: rispondere a messaggi, ricopiare documenti, cercare informazioni. Non sai da dove iniziare con l'AI e temi di perdere tempo.",
+        "outcome": "Porti a casa una richiesta scritta per un problema tuo, con un metodo per verificare la risposta e decidere se è utile.",
+        "agenda": [
+          "Apertura: il lavoro ripetitivo che invade la giornata (15 min)",
+          "Dimostrazione: un esempio concreto di richiesta e verifica (20 min)",
+          "Esercizio guidato: individua un'attività ripetitiva tua (30 min)",
+          "Verifica: controlla gli errori e decidi se il risultato è utile (15 min)",
+          "Chiusura: prossimi passi e materiali da portare a casa (10 min)"
+        ],
+        "status": "proposed"
+      },
+      {
+        "title": "Laboratorio: risposte ai clienti senza errori",
+        "audience": "Titolari e team che passano ore a rispondere a clienti e fornitori, con messaggi ripetitivi e richieste simili.",
+        "problem": "Rispondere a clienti e fornitori richiede tempo e attenzione: rischi di sbagliare informazioni o di dimenticare dettagli importanti.",
+        "outcome": "Preparare una risposta chiara e verificata per una richiesta reale, usando un metodo che puoi ripetere da solo.",
+        "agenda": [
+          "Apertura: le domande che ricevi ogni giorno (15 min)",
+          "Dimostrazione: preparare una risposta da fatti forniti (20 min)",
+          "Esercizio guidato: scrivi una risposta per una richiesta tua (30 min)",
+          "Verifica: controlla errori e informazioni mancanti (15 min)",
+          "Chiusura: come ripetere il metodo nel tuo lavoro (10 min)"
+        ],
+        "status": "proposed"
+      },
+      {
+        "title": "Laboratorio: documenti da ricopiare senza fatica",
+        "audience": "Titolari e team che ricopiano documenti, compilano moduli o preparano preventivi a mano, con rischio di errori.",
+        "problem": "Ricopiare documenti e compilare moduli è noioso e soggetto a errori: perdi tempo e rischi di sbagliare dati importanti.",
+        "outcome": "Ricopiare un documento in modo accurato, verificando che le informazioni siano corrette e complete.",
+        "agenda": [
+          "Apertura: i documenti che devi ricopiare (15 min)",
+          "Dimostrazione: estrarre informazioni da un documento (20 min)",
+          "Esercizio guidato: ricopia un documento tuo con l'AI (30 min)",
+          "Verifica: controlla la fedeltà e correggi gli errori (15 min)",
+          "Chiusura: come integrare il metodo nel tuo flusso (10 min)"
+        ],
+        "status": "proposed"
+      }
+    ]
+  },
+  "owner": {
+    "vat": "02087370496",
+    "name": "Francesco Principe",
+    "phone": "+393402788830",
+    "address": "Strada Provinciale Ovest, Porto Azzurro, 57036 Livorno",
+    "phone_display": "340 2788830"
+  },
+  "identity": {
+    "brand_name": "Intelligenza Artificiale Elba",
+    "public_name": "Intelligenza Artificiale Elba",
+    "logo_asset": "elba-orbit.webp",
+    "wordmark_asset": "/static/brand-assets/elba-wordmark.webp",
+    "symbol_asset": "/static/brand-assets/elba-symbol.webp",
+    "domain": "intelligenzaartificialeelba.it",
+    "approved": true
+  }
+}

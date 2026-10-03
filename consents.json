@@ -1,0 +1,8 @@
+{
+  "CONSENT_VERSION": "free-elba-event-2026-10-03-v1",
+  "CONSENT_TEXT": {
+    "event_contact": "Chiedo di entrare nella lista d’attesa del primo incontro gratuito all’Elba e acconsento a essere ricontattato via email o telefono per data, luogo e iscrizione a questo evento.",
+    "marketing_email": "Acconsento a ricevere via email novità, inviti ad altri incontri e comunicazioni promozionali di Intelligenza Artificiale Elba. Facoltativo, revocabile in ogni momento.",
+    "marketing_phone": "Acconsento a ricevere telefonate e SMS con novità, inviti ad altri incontri e comunicazioni promozionali di Intelligenza Artificiale Elba. Facoltativo, revocabile in ogni momento."
+  }
+}
