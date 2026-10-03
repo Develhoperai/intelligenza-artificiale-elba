@@ -58,7 +58,11 @@ def founder_waitlist(request: Request):
         authorized(request, session, roles={"founder"})
         mission = company.current(session)
         if not mission:
-            raise HTTPException(404)
+            return {
+                "counts": {"total": 0, "event_contact": 0, "marketing_email": 0, "marketing_phone": 0},
+                "entries": [],
+                "message": "La lista d’attesa sarà disponibile dopo l’attivazione dell’azienda. Nessuna iscrizione è stata raccolta.",
+            }
         rows = session.scalars(
             select(WaitlistEntry)
             .where(WaitlistEntry.mission_id == mission.id)
