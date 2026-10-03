@@ -1,125 +1,207 @@
 'use strict';
+// Scroll direction for the page: one rAF loop owns every scroll-linked value and the 3D stage.
+// No scroll listeners, no inline styles in markup (production CSP is style-src 'self').
 (() => {
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const root = document.documentElement;
   const world = document.querySelector('[data-experience]');
-  const toggle = document.querySelector('.scene-toggle');
-  const photos = [...document.querySelectorAll('.hero-photo')];
-  const video = document.querySelector('.hero-video');
+  if (!world) return;
+  root.classList.add('js');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const narrow = matchMedia('(max-width: 60rem)');
   const saveData = Boolean(navigator.connection?.saveData);
-  let stopped = false, ticking = false;
-  const renderPhotos = () => {
-    ticking = false;
-    if (stopped || reduced.matches || document.hidden) return;
-    photos.forEach(photo => {
-      const r = photo.parentElement.getBoundingClientRect();
-      if (r.bottom < 0 || r.top > innerHeight) return;
-      const travel = Math.max(-1, Math.min(1, r.top / innerHeight));
-      photo.style.transform = `scale(1.04) translate3d(0,${travel * 12}px,0)`;
+  const toggle = document.querySelector('.scene-toggle');
+  const video = document.querySelector('.hero-video');
+  const header = document.querySelector('[data-header]');
+  const version = document.querySelector('.stage-canvas')?.dataset.assetVersion || '';
+  const scenes = {};
+  world.querySelectorAll('[data-scene]').forEach(el => { scenes[el.dataset.scene] = el; });
+  const sheet = world.querySelector('.sheet');
+  const heroFrame = world.querySelector('[data-hero-frame]');
+  const heroCopy = world.querySelector('[data-hero-copy]');
+  const fragments = [...world.querySelectorAll('[data-fragment]')];
+  const steps = [...world.querySelectorAll('[data-step]')];
+  const track = [...world.querySelectorAll('.steps-track i')];
+  const peakEnd = world.querySelector('[data-peak-end]');
+
+  // Shared with the 3D module. Values are smoothed scroll progress, 0..1.
+  const state = { hero: 0, chaos: 0, peak: 0, door: 0, time: 0, paused: false, covered: false, project: world.dataset.experience === 'project', narrow: narrow.matches };
+  const target = { hero: 0, chaos: 0, peak: 0, door: 0 };
+  let motion = !reduced.matches;
+  let stage = null, raf = 0, last = 0, activeStep = -2;
+
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a)); return t * t * (3 - 2 * t); };
+
+  // Headings: wrap words so they can rise out of a mask. The accessible name is kept on the heading.
+  const split = el => {
+    if (el.dataset.splitDone) return;
+    el.dataset.splitDone = '1';
+    el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
+    let index = 0;
+    [...el.childNodes].forEach(node => {
+      if (node.nodeType !== Node.TEXT_NODE) return;
+      const fragment = document.createDocumentFragment();
+      node.textContent.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) { fragment.append(' '); return; }
+        const outer = document.createElement('span'); outer.className = 'w'; outer.setAttribute('aria-hidden', 'true');
+        const inner = document.createElement('span'); inner.textContent = part;
+        inner.style.transitionDelay = `${Math.min(index++ * 45, 540)}ms`;
+        outer.append(inner); fragment.append(outer);
+      });
+      node.replaceWith(fragment);
     });
   };
-  const scroll = () => {
-    if (!ticking && !stopped && !reduced.matches) { ticking = true; requestAnimationFrame(renderPhotos); }
-  };
-  const reconcileVideo = () => {
-    if (!video) return;
-    const r = video.getBoundingClientRect();
-    if (stopped || reduced.matches || saveData || document.hidden || r.bottom <= 0 || r.top >= innerHeight) video.pause();
-    else {
-      video.hidden = false;
-      if (!video.getAttribute('src')) video.src = matchMedia('(max-width:760px)').matches ? video.dataset.sourceSmall : video.dataset.sourceWide;
-      video.play().catch(() => { video.hidden = true; });
-    }
-  };
-  window.addEventListener('scroll', () => { scroll(); reconcileVideo(); }, { passive: true });
-  document.addEventListener('visibilitychange', reconcileVideo);
-  reduced.addEventListener('change', () => {
-    photos.forEach(p => p.style.removeProperty('transform'));
-    if (toggle) toggle.hidden = reduced.matches || saveData;
-    if (video && reduced.matches) video.hidden = true;
-    reconcileVideo();
-  });
-  const pauseMedia = () => {
-    stopped = !stopped;
-    document.documentElement.dataset.scenePaused = String(stopped);
-    if (toggle) {
-      toggle.setAttribute('aria-pressed', String(stopped));
-      toggle.setAttribute('aria-label', stopped ? 'Riprendi la scena' : 'Metti in pausa la scena');
-      toggle.querySelector('span').textContent = stopped ? 'Riprendi la scena' : 'Ferma la scena';
-    }
-    world?.dispatchEvent(new CustomEvent('experience:pause', { detail: { paused: stopped } }));
-    scroll(); reconcileVideo();
-  };
-  toggle?.addEventListener('click', pauseMedia);
-  if (world && !reduced.matches && !saveData) {
-    toggle.hidden = false;
-    let started = false;
-    const start = () => {
-      if (started) return;
-      started = true;
-      import('/static/experience-3d.js?v=elba16').then(module => module.startExperience(world)).catch(() => {
-        world.dataset.sceneState = 'fallback';
+
+  const revealAll = () => world.querySelectorAll('[data-split],[data-reveal]').forEach(el => el.classList.add('in'));
+  let revealer = null;
+  const armReveals = () => {
+    world.querySelectorAll('[data-split]').forEach(split);
+    if (!('IntersectionObserver' in window)) { revealAll(); return; }
+    revealer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in');
+        revealer.unobserve(entry.target);
       });
-    };
-    if ('IntersectionObserver' in window) {
-      const loader = new IntersectionObserver(entries => {
-        if (entries.some(e => e.isIntersecting)) { loader.disconnect(); start(); }
-      }, { rootMargin: '160px' });
-      const firstScene = world.querySelector('[data-scene-viewport]');
-      if (firstScene) loader.observe(firstScene);
-      else world.dataset.sceneState = 'static';
-    } else start();
-  } else if (world) {
-    world.dataset.sceneState = 'static';
-    if (video) { video.pause(); video.hidden = true; }
-  }
-  renderPhotos(); reconcileVideo();
-  const tool = document.querySelector('[data-workload-tool]');
-  if (!tool) return;
-  const rows = [
-    { id: 'messages', label: 'rispondere alle stesse domande' },
-    { id: 'documents', label: 'ricopiare o riscrivere documenti' },
-    { id: 'information', label: 'cercare informazioni sparse' }
-  ];
-  const hours = document.getElementById('workload-hours');
-  const priority = document.getElementById('workload-priority');
-  const feedback = document.getElementById('workload-feedback');
-  const format = new Intl.NumberFormat('it-IT', { maximumFractionDigits: 1 });
-  let current = null;
-  const calculate = (announce = false) => {
-    const items = [];
-    for (const row of rows) {
-      const count = document.getElementById(`work-${row.id}-count`);
-      const minutes = document.getElementById(`work-${row.id}-minutes`);
-      for (const input of [count, minutes]) {
-        if (input.value.trim() === '' || !Number.isFinite(input.valueAsNumber) || !input.checkValidity()) {
-          feedback.textContent = 'Inserisci numeri interi entro i limiti: da 0 a 500 ripetizioni e da 0 a 240 minuti.';
-          if (announce) { input.focus(); input.reportValidity(); }
-          return false;
-        }
-      }
-      items.push({ ...row, count: count.valueAsNumber, minutes: minutes.valueAsNumber, total: count.valueAsNumber * minutes.valueAsNumber });
-    }
-    const total = items.reduce((sum, row) => sum + row.total, 0);
-    const first = items.reduce((best, row) => row.total > best.total ? row : best, items[0]);
-    hours.value = format.format(total / 60);
-    hours.dataset.minutes = String(total);
-    priority.textContent = total ? `Da guardare per primo: ${first.label}.` : 'Hai indicato zero ore. Puoi aggiungere le attività che si ripetono nella tua settimana.';
-    items.forEach(row => { document.querySelector(`[data-meter="${row.id}"]`).style.width = `${total ? row.total / total * 100 : 0}%`; });
-    current = { items, total };
-    world?.dispatchEvent(new CustomEvent('experience:workload', { detail: { minutes: total } }));
-    if (announce) feedback.textContent = 'Scheda aggiornata. È il carico stimato che hai indicato, non un risparmio previsto.';
-    return true;
+    }, { threshold: 0.2, rootMargin: '0px 0px -6% 0px' });
+    world.querySelectorAll('[data-split],[data-reveal]').forEach(el => revealer.observe(el));
   };
-  document.getElementById('calculate-workload').addEventListener('click', () => calculate(true));
-  tool.querySelectorAll('input').forEach(input => input.addEventListener('input', () => calculate(false)));
-  document.getElementById('download-workload').addEventListener('click', () => {
-    if (!calculate(true)) return;
-    const content = 'INTELLIGENZA ARTIFICIALE ELBA\nScheda del lavoro ripetitivo — stime personali\n\n' + current.items.map(row => `${row.label}: ${row.count} volte/settimana × ${row.minutes} minuti = ${row.total} minuti/settimana`).join('\n') + `\n\nTotale indicato: ${format.format(current.total / 60)} ore/settimana.\n${priority.textContent}\n\nFormula: somma di ripetizioni × minuti, divisa per 60.\nStima personale, non una previsione di risparmio né una valutazione automatica dell’utilità dell’AI.\nPrimo passo: osservare il processo, provare con dati di esempio e definire i controlli.\n\nCalcolo nel browser: nessun dato è stato inviato a un modello AI o salvato da questo sito.\n`;
-    const url = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
-    const link = document.createElement('a'); link.href = url; link.download = 'elba-scheda-del-tuo-lavoro.txt';
-    document.body.appendChild(link); link.click(); link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    feedback.textContent = 'Scheda scaricata. Puoi portarla al primo incontro per ragionare su un processo concreto.';
+
+  const playVideo = () => {
+    if (!video) return;
+    const hero = scenes.hero?.getBoundingClientRect();
+    const visible = hero && hero.bottom > 0 && hero.top < innerHeight;
+    if (state.paused || reduced.matches || saveData || document.hidden || !visible) { video.pause(); return; }
+    if (!video.getAttribute('src')) video.src = narrow.matches ? video.dataset.sourceSmall : video.dataset.sourceWide;
+    video.hidden = false;
+    video.play().catch(() => { video.hidden = true; });
+  };
+
+  const measure = () => {
+    const vh = innerHeight;
+    const through = el => { const r = el.getBoundingClientRect(); return clamp(-r.top / Math.max(1, r.height - vh)); };
+    if (scenes.hero) target.hero = through(scenes.hero);
+    if (scenes.chaos) target.chaos = through(scenes.chaos);
+    if (scenes.peak) target.peak = through(scenes.peak);
+    if (scenes.door) target.door = clamp((vh - scenes.door.getBoundingClientRect().top) / vh);
+    if (sheet) { const r = sheet.getBoundingClientRect(); state.covered = r.top <= 0 && r.bottom >= vh; }
+    header?.classList.toggle('is-solid', scrollY > vh * 0.6);
+  };
+
+  const direct = () => {
+    if (heroFrame) {
+      const p = state.hero;
+      const scale = 1 - 0.46 * smooth(0, 0.85, p);
+      heroFrame.style.transform = `translate3d(0,${(-9 * p).toFixed(2)}vh,0) scale(${scale.toFixed(4)})`;
+      heroFrame.style.borderRadius = `${(2.2 * smooth(0, 0.3, p)).toFixed(2)}rem`;
+      heroFrame.style.opacity = (1 - smooth(0.62, 0.98, p)).toFixed(3);
+      heroCopy.style.opacity = (1 - smooth(0.04, 0.3, p)).toFixed(3);
+      heroCopy.style.transform = `translate3d(0,${(-7 * smooth(0, 0.4, p)).toFixed(2)}vh,0)`;
+    }
+    fragments.forEach((el, i) => {
+      const start = 0.06 + i * 0.2;
+      const a = smooth(start, start + 0.12, state.chaos) * (1 - smooth(start + 0.34, start + 0.5, state.chaos));
+      el.style.opacity = a.toFixed(3);
+      el.style.transform = `translate3d(0,${((1 - smooth(start, start + 0.5, state.chaos)) * 3 - 1.5).toFixed(2)}rem,0)`;
+    });
+    if (steps.length) {
+      const p = state.peak;
+      const step = p < 0.07 ? -1 : p < 0.36 ? 0 : p < 0.63 ? 1 : 2;
+      if (step !== activeStep) {
+        activeStep = step;
+        steps.forEach((el, i) => { el.classList.toggle('is-active', i === step); el.classList.toggle('is-past', i < step); });
+        track.forEach((el, i) => el.classList.toggle('is-done', i <= step));
+      }
+      peakEnd?.classList.toggle('is-active', p > 0.84);
+      steps[0].parentElement.classList.toggle('is-over', p > 0.84);
+    }
+  };
+
+  const frame = now => {
+    raf = requestAnimationFrame(frame);
+    const dt = Math.min(0.05, (now - last) / 1000 || 0.016); last = now;
+    if (document.hidden) return;
+    measure();
+    const k = 1 - Math.exp(-dt * 7); // ≈0.4 s of scrub smoothing
+    let moving = false;
+    for (const key in target) {
+      const delta = target[key] - state[key];
+      if (Math.abs(delta) > 0.0002) { state[key] += delta * k; moving = true; } else state[key] = target[key];
+    }
+    if (!state.paused) state.time += dt;
+    direct();
+    if (stage && !state.covered && (moving || !state.paused)) stage.render(state);
+  };
+
+  const stopMotion = () => {
+    cancelAnimationFrame(raf); raf = 0;
+    root.classList.remove('motion');
+    [heroFrame, heroCopy, ...fragments].forEach(el => el?.removeAttribute('style'));
+    revealAll();
+    world.dataset.sceneState = 'static';
+    document.querySelector('.stage')?.classList.remove('is-ready');
+    if (video) { video.pause(); video.hidden = true; }
+    if (toggle) toggle.hidden = true;
+  };
+
+  const rollSectors = () => {
+    const list = world.querySelector('.sectors-track');
+    if (!list || list.classList.contains('is-rolling')) return;
+    [...list.children].forEach(item => { const copy = item.cloneNode(true); copy.setAttribute('aria-hidden', 'true'); list.append(copy); });
+    list.classList.add('is-rolling');
+  };
+
+  const startMotion = () => {
+    root.classList.add('motion');
+    rollSectors();
+    armReveals();
+    if (toggle) toggle.hidden = false;
+    last = performance.now();
+    raf = requestAnimationFrame(frame);
+    playVideo();
+    if (saveData) { world.dataset.sceneState = 'static'; return; }
+    import(`/static/experience-3d.js?v=${version}`)
+      .then(module => module.startExperience(world.ownerDocument.querySelector('.stage-canvas'), state))
+      .then(instance => {
+        stage = instance;
+        world.dataset.sceneTier = instance.tier;
+        world.dataset.sceneDpr = String(instance.dpr);
+        world.dataset.sceneState = state.paused ? 'paused' : 'running';
+        document.querySelector('.stage')?.classList.add('is-ready');
+      })
+      .catch(() => { world.dataset.sceneState = 'fallback'; });
+  };
+
+  // Urgent requests: build the message here and hand it to the visitor's own WhatsApp. Nothing is sent to the site.
+  const whatsapp = document.getElementById('whatsapp-form');
+  whatsapp?.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!whatsapp.reportValidity()) return;
+    const f = whatsapp.elements;
+    const who = f.business.value.trim() ? `${f.name.value.trim()} (${f.business.value.trim()})` : f.name.value.trim();
+    const text = `Ciao, sono ${who}. Scrivo dal sito Intelligenza Artificiale Elba.\n\n${f.message.value.trim()}`;
+    window.open(`https://wa.me/${whatsapp.dataset.whatsapp}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
   });
-  calculate(false);
+
+  toggle?.addEventListener('click', () => {
+    state.paused = !state.paused;
+    root.dataset.scenePaused = String(state.paused);
+    if (stage) world.dataset.sceneState = state.paused ? 'paused' : 'running';
+    toggle.setAttribute('aria-pressed', String(state.paused));
+    const label = state.paused ? 'Riprendi le animazioni' : 'Ferma le animazioni';
+    toggle.setAttribute('aria-label', label);
+    toggle.querySelector('span').textContent = label;
+    playVideo();
+  });
+  document.addEventListener('visibilitychange', playVideo);
+  if ('IntersectionObserver' in window && scenes.hero) new IntersectionObserver(playVideo).observe(scenes.hero);
+  narrow.addEventListener('change', () => { state.narrow = narrow.matches; stage?.resize(); });
+  addEventListener('resize', () => stage?.resize());
+  reduced.addEventListener('change', () => {
+    motion = !reduced.matches;
+    if (motion && !raf) startMotion(); else if (!motion) stopMotion();
+  });
+
+  if (motion) startMotion(); else { world.dataset.sceneState = 'static'; if (video) video.hidden = true; }
 })();

@@ -2,7 +2,7 @@
 
 Codice del sito pubblico: https://intelligenzaartificialeelba.it
 
-Brand definitivo: **Intelligenza Artificiale Elba**. Pubblico: titolari e team delle imprese dell'Isola d'Elba. Il percorso da promuovere ora è **il primo evento di formazione gratuito**. La CTA invita alla lista d'attesa con nome, cognome, email e telefono. Data e luogo sono in preparazione; la lista non prenota un posto.
+Brand definitivo: **Intelligenza Artificiale Elba**. Pubblico: titolari e team delle imprese dell'Isola d'Elba. Il percorso da promuovere ora è **la formazione AI per le imprese dell'Elba, con il primo incontro gratuito**: gratuito è il primo incontro, non tutta la formazione. La CTA invita alla lista d'attesa con nome, cognome, email e telefono. Data e luogo sono in preparazione; la lista non prenota un posto.
 
 ## Avviare l'anteprima
 
@@ -18,20 +18,24 @@ Apri http://127.0.0.1:8080. L'anteprima è completa per homepage, sei pagine sec
 
 ## Dove intervenire
 
-- `templates/company-site.html`: struttura HTML, testi statici e modulo.
-- `content.json`: contenuti pubblici approvati che alimentano il template.
-- `static/company-site.css`: direzione visiva e responsive.
-- `static/company-site.js`: video, pausa, carico di lavoro, interazioni.
-- `static/experience-3d.js`: tre scene 3D (scrivania disordinata, aula, scrivania ordinata), confinate nelle finestre narrative.
-- `static/elba-outline.svg`, `static/elba-outline-source.json`: sagoma reale dell’Elba da dati ISTAT / geojson-italy, licenza CC BY 4.0 con provenienza e hash.
+- `templates/company-site.html`: struttura HTML, testi della homepage e modulo.
+- `content.json`: contenuti delle sei pagine progetto e dati del titolare.
+- `static/company-site.css`: direzione visiva, layout e responsive. Tutte le regole di movimento stanno sotto `.motion`.
+- `static/company-site.js`: regia dello scroll (un solo ciclo `requestAnimationFrame`), comparsa dei testi, video, pausa.
+- `static/experience-3d.js`: la scena 3D unica. I fogli di lavoro sparsi si ricompongono nella sagoma dell’Elba.
+- `static/elba-outline.svg`, `static/elba-outline-source.json`: sagoma reale dell’Elba da dati ISTAT / geojson-italy, licenza CC BY 4.0 con provenienza e hash. La scena 3D legge il tracciato da questo file.
 - `static/vendor/threejs/`: Three.js locale con licenza originale.
+- `static/archivo-variable.woff2`: Archivo variabile (assi peso e larghezza), licenza OFL in `static/archivo-LICENSE.txt`.
 - `static/media/`: foto originale, WebP responsive e video ottimizzati.
 - `static/brand-assets/`: wordmark e simbolo forniti dal titolare.
 - `static/waitlist.js`: invio e gestione errori del modulo.
 - `templates/company-privacy.html`, `templates/waitlist-preferences.html`: informativa e gestione consensi.
+- `design/DESIGN.md`: il contratto di stile. Leggilo prima di aggiungere o cambiare una sezione.
 - `production_backend/`: codice canonico del salvataggio, modello PostgreSQL, migrazioni 0008/0009 e route reali, esportati dal progetto protetto. Questi file si integrano con transazioni, audit, autenticazione e autorizzazione del progetto principale; non costituiscono un secondo server di produzione.
 
 Il repository permette a un'altra AI di modificare il sito senza accesso alle credenziali, ai contatti raccolti, alla dashboard o alle copie di sicurezza. Per portare le modifiche in produzione, trasferire i template e gli asset nel progetto principale, mantenendo il contratto del modulo e verificando il risultato prima del rilascio. Il push qui **non modifica automaticamente il sito online**.
+
+La produzione applica `Content-Security-Policy: script-src 'self'; style-src 'self'`: niente `<style>`, attributi `style` o script inline nei template. Gli stili dinamici passano da JavaScript (`element.style`).
 
 ## Contratto del modulo
 
@@ -45,14 +49,18 @@ I recapiti restano privati; agli agenti arrivano solo conteggi. Nessuna email, t
 
 ## Direzione visiva e verifica
 
-Esperienza cinematografica sull'intera pagina: foto formativa e video sottile nella hero, scena di lavoro in 3D, profondità e movimento collegati alla narrazione. Testi e CTA rimangono HTML. Preservare brand e asset forniti, leggibilità, navigazione da tastiera, pausa, `prefers-reduced-motion`, risparmio dati e fallback senza WebGL. Non aggiungere dipendenze remote, analytics, cookie marketing, testimonianze, date o risultati inventati.
+La pagina è un film in cinque scene guidato dallo scroll: il video dell’aula a tutto schermo, che si ritira in una cornice; una tempesta di fogli di lavoro in 3D; i fogli che atterrano e compongono l’Isola d’Elba mentre scorrono i tre passi dell’incontro; un foglio chiaro con ciò che viene dopo e le domande; l’isola a riposo accanto al modulo. Testi e CTA rimangono HTML. Senza JavaScript, con `prefers-reduced-motion`, con risparmio dati o senza WebGL la pagina è un documento normale e completo, con la sagoma statica al posto della scena.
 
-Verificare almeno desktop 1440 px, mobile 390 px e 360 px; assenza di overflow ed errori; CTA raggiungibile; caselle marketing non selezionate; video/3D sospesi quando non visibili; preferenze di movimento rispettate. Il calcolo del carico resta nel browser e non promette risparmi.
+Preservare brand e asset forniti, leggibilità, navigazione da tastiera, pulsante di pausa e i fallback. Non aggiungere dipendenze remote, analytics, cookie marketing, testimonianze, date o risultati inventati.
+
+Verificare almeno desktop 1440 px e mobile 390 px: assenza di overflow orizzontale ed errori in console; CTA raggiungibile; caselle marketing non selezionate; versione con movimento ridotto leggibile dall’inizio alla fine.
 
 Gli asset del brand e la fotografia sono forniti dal titolare; il video è una rielaborazione AI e non documenta un evento passato. Conservare le licenze dei componenti di terze parti (Three.js e Archivo).
 
-## Revisione del 3 ottobre 2026
+## Revisione cinematografica del 3 ottobre 2026
 
-Il messaggio principale è esplicito: **Formazione AI gratuita per le imprese dell’Elba.** Il video originale compare nella sola hero. Programma e iscrizione precedono i servizi successivi; il calcolatore è un esercizio facoltativo e compatto. La homepage usa copy editoriale nel template: i testi storici di `content.json` non devono sostituire il messaggio gratuito né la geografia. Il contenuto delle sei pagine progetto resta nel JSON. Le tre animazioni sono scene 3D stilizzate, non nuovi filmati fotorealistici.
+Homepage, pagine progetto, CSS e JavaScript sono stati riscritti. Restano il video e la foto della hero, il wordmark, i testi approvati, il contratto del modulo e la sagoma geografica verificata. Sono stati tolti il calcolatore del carico di lavoro (con la relativa frase nell’informativa) e le tre scene 3D precedenti. La versione degli asset nei template è `cine3`.
 
-Preservare la verifica del modulo e la migrazione additiva: i vecchi iscritti restano validi con nome/cognome da confermare, mentre le nuove richieste includono quattro campi. La sagoma geografica deriva dal poligono dell’Elba nei confini ISTAT distribuiti da [geojson-italy](https://github.com/guglielmo/geojson-italy); adattamento SVG con nord in alto e proporzioni geografiche preservate, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Su richiesta del titolare il titolo è **Formazione AI per le imprese dell’Elba.** seguito da **Il primo incontro è gratuito.**, perché non si legga che ogni percorso è gratuito. La sezione «Per ogni impresa dell’isola» dichiara che l’incontro è per tutti i settori. Il blocco «Hai un’urgenza?» prepara un messaggio e lo apre nell’app WhatsApp del visitatore verso il numero del titolare: il sito non riceve né salva quel testo, e l’informativa lo dice. La sezione «Dopo l’incontro» presenta i due sbocchi, altra formazione e consulenza in azienda, senza prezzi né risultati promessi; i sei esempi di progetto restano in `content.json`.
+
+La sagoma geografica deriva dal poligono dell’Elba nei confini ISTAT distribuiti da [geojson-italy](https://github.com/guglielmo/geojson-italy), [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); l’attribuzione è visibile accanto al modulo. I vecchi iscritti restano validi grazie alla migrazione additiva 0009.
