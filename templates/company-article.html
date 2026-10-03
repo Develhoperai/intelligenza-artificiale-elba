@@ -1,0 +1,22 @@
+<!doctype html>{% set analytics_id = analytics() if analytics is defined else '' %}{% set asset_version = 'cine5' %}<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071630">
+<title>{{ article.title if article else 'Risorse' }} | Intelligenza Artificiale Elba</title>
+<meta name="description" content="{{ article.excerpt if article else 'Guide pratiche sull’intelligenza artificiale per le imprese dell’Isola d’Elba.' }}">
+<link rel="canonical" href="{{ origin }}/azienda/risorse{{ '/' + article.slug if article else '' }}">
+<link rel="preload" href="/static/archivo-variable.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/static/company-site.css?v={{ asset_version }}">{% if analytics_id %}<script src="/static/consent.js?v=1" defer></script>{% endif %}</head>
+<body class="reading">
+<a class="skip-link" href="#main">Vai al contenuto</a>
+<header class="site-header"><a class="brand" href="/azienda" aria-label="Intelligenza Artificiale Elba, pagina iniziale"><img src="/static/brand-assets/elba-wordmark.webp" width="1000" height="400" alt="Intelligenza Artificiale Elba"></a><nav aria-label="Navigazione principale"><a href="/azienda#incontro">Il primo incontro</a><a href="/azienda/risorse">Risorse</a><a href="/azienda#lista-attesa" class="nav-cta">{{ 'Iscriviti gratis' if waitlist_enabled else 'Scopri la formazione' }}</a></nav></header>
+<main id="main">
+{% if article %}
+<article class="article"><header class="article-head"><a class="back-link" href="/azienda/risorse"><svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg><span>Tutte le risorse</span></a><h1>{{ article.title }}</h1>{% if article.excerpt %}<p class="lead">{{ article.excerpt }}</p>{% endif %}{% if article.published_at %}<p class="fine"><time datetime="{{ article.published_at.date().isoformat() }}">{{ article.published_at.strftime('%d/%m/%Y') }}</time></p>{% endif %}</header>
+<div class="sheet article-sheet"><div class="article-body">{{ article.html|safe }}</div>
+<aside class="article-next"><p>Il primo incontro di formazione è gratuito. Si parte dal lavoro di ogni giorno, senza competenze tecniche.</p><a class="ink-link" href="/azienda#incontro">Scopri il primo incontro <svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a></aside></div></article>
+{% else %}
+<section class="article-head"><h1>Risorse</h1><p class="lead">Guide pratiche sull’intelligenza artificiale nel lavoro delle imprese dell’Elba.</p></section>
+<div class="sheet article-sheet">{% if articles %}<ul class="project-rows wrap">{% for item in articles %}<li><a class="service-card" href="/azienda/risorse/{{ item.slug }}"><span class="row-title">{{ item.title }}</span><span class="row-text">{{ item.excerpt }}</span><svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a></li>{% endfor %}</ul>{% else %}<p class="wrap article-empty">Le prime guide sono in preparazione.</p>{% endif %}</div>
+{% endif %}
+</main>
+{% if analytics_id %}<aside class="consent" data-consent data-analytics="{{ analytics_id }}" aria-label="Scelta sulle statistiche di visita" hidden><p>Con il tuo permesso usiamo Google Analytics per contare le visite. I cookie di statistica si attivano solo se accetti; se rifiuti il sito funziona allo stesso modo. <a href="/azienda/privacy#cookie">Privacy e cookie</a></p><div class="consent-actions"><button type="button" data-consent-choice="denied">Rifiuta</button><button type="button" data-consent-choice="granted">Accetta</button></div></aside>{% endif %}
+<footer class="site-footer"><div class="wrap"><a class="brand" href="/azienda" aria-label="Intelligenza Artificiale Elba, pagina iniziale"><img src="/static/brand-assets/elba-wordmark.webp" width="1000" height="400" alt="Intelligenza Artificiale Elba"></a><p>{{ owner.name }}<br>P. IVA {{ owner.vat }}<br>{{ owner.address }}</p><span class="footer-links"><a href="/azienda/privacy">Privacy</a><a href="/azienda/privacy#cookie">Cookie</a>{% if analytics_id %}<button type="button" data-consent-open hidden>Preferenze cookie</button>{% endif %}</span></div></footer>
+</body></html>

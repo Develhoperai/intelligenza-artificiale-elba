@@ -69,4 +69,8 @@ La sagoma geografica deriva dal poligono dell’Elba nei confini ISTAT distribui
 
 Il pulsante di pausa delle animazioni è stato tolto su richiesta del titolare; resta il rispetto di `prefers-reduced-motion`. La casella del ricontatto per l'evento è preselezionata; l'informativa va spuntata a mano; le due caselle marketing restano facoltative e non preselezionate, perché una casella già spuntata non è un consenso valido (GDPR, considerando 32).
 
-L'informativa ha una sezione «Cookie e statistiche». `static/consent.js` e il riquadro di consenso compaiono solo se la produzione ha un ID Google Analytics 4 configurato (`ELBA_ANALYTICS_ID`): prima del consenso nessuna richiesta parte verso Google. Senza ID il sito non ha riquadro, cookie o terze parti. In anteprima: `ANALYTICS_ID=G-XXXXXXX` prima di avviare `server.py`. La versione degli asset è `cine4`.
+L'informativa ha una sezione «Cookie e statistiche». `static/consent.js` e il riquadro di consenso compaiono solo se la produzione ha un ID Google Analytics 4 configurato (`ELBA_ANALYTICS_ID`): prima del consenso nessuna richiesta parte verso Google. Senza ID il sito non ha riquadro, cookie o terze parti. In anteprima: `ANALYTICS_ID=G-XXXXXXX` prima di avviare `server.py`. La versione degli asset è `cine5`.
+
+## Risorse (articoli)
+
+`templates/company-article.html` è la pagina di lettura per l'elenco `/azienda/risorse` e per i singoli articoli. Gli articoli non stanno in questo repository: vivono nel database di produzione e arrivano dalla piattaforma SEO del titolare tramite un'API di pubblicazione autenticata, compatibile con le chiamate REST di WordPress. Il testo viene ricostruito da un filtro che ammette solo i tag necessari; le immagini sono WebP servite dal sito. La voce «Risorse» compare nel menu solo quando esiste almeno un articolo pubblicato. In anteprima l'elenco è vuoto.

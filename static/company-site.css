@@ -249,6 +249,30 @@ form .button{justify-self:start;padding:.8rem 1.25rem;font-size:.95rem}
 .project-next{display:grid;gap:1.2rem;justify-items:start;margin-top:clamp(4rem,8vw,7rem);padding-top:2.2rem;border-top:1px solid var(--rule-light)}
 .project-next p{font-stretch:112%;font-weight:600;font-size:clamp(1.3rem,2.2vw,1.9rem);line-height:1.2;max-width:30ch}
 
+/* articles: a calm reading page on the same sea and sheet */
+.reading .site-header{position:absolute}
+.article-head{display:grid;gap:1.2rem;justify-items:start;max-width:62rem;margin-inline:auto;padding:9.5rem var(--gutter) clamp(2.5rem,6vw,4.5rem)}
+.article-head h1{font-size:clamp(2rem,4.4vw,4rem);max-width:20ch}
+.article-head .lead{max-width:58ch}
+.article-sheet{padding-block:clamp(3rem,7vw,6rem)}
+.article-body{max-width:44rem;margin-inline:auto;padding-inline:var(--gutter);font-size:1.125rem;line-height:1.65}
+.article-body>*+*{margin-top:1.25rem}
+.article-body h2{font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.1;margin-top:3rem}
+.article-body h3{font-size:1.3rem;margin-top:2.2rem}
+.article-body ul,.article-body ol{padding-left:1.3rem;list-style:revert}
+.article-body li+li{margin-top:.5rem}
+.article-body a{color:var(--ink-link)}
+.article-body img{width:100%;height:auto;border-radius:1rem}
+.article-body blockquote{margin:0;padding-left:1.2rem;border-left:1px solid var(--rule-light);color:var(--ink-dim)}
+.article-body table{width:100%;border-collapse:collapse;font-size:1rem}
+.article-body th,.article-body td{padding:.6rem .5rem;border-bottom:1px solid var(--rule-light);text-align:left;vertical-align:top}
+.article-body .key-takeaways{padding:1.3rem 1.5rem;background:var(--paper-2);border-radius:1rem}
+.article-body details{border-top:1px solid var(--rule-light);padding-block:.9rem}
+.article-body summary{font-weight:700;cursor:pointer}
+.article-next{display:grid;gap:1rem;justify-items:start;max-width:44rem;margin:clamp(3rem,7vw,5rem) auto 0;padding:2rem var(--gutter) 0;border-top:1px solid var(--rule-light)}
+.article-next p{font-stretch:112%;font-weight:600;font-size:1.3rem;line-height:1.25;max-width:32ch}
+.article-empty{color:var(--ink-dim)}
+
 /* footer */
 .site-footer{position:relative;z-index:2;background:var(--sea);border-top:1px solid var(--rule-dark);padding-block:2.2rem 5rem;font-size:.875rem;color:var(--foam-dim)}
 .site-footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem 3rem}

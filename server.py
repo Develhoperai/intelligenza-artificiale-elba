@@ -42,6 +42,12 @@ def preview_only():
     return JSONResponse({'detail': 'Anteprima locale: il modulo non raccoglie dati. Il salvataggio e i consensi sono gestiti dal backend di produzione sul VPS.'}, status_code=409)
 
 
+@app.get('/azienda/risorse', response_class=HTMLResponse)
+def resources():
+    # Preview of the article index. Articles themselves live in the production database.
+    return templates.get_template('company-article.html').render(**context(), articles=[], article=None)
+
+
 @app.get('/robots.txt')
 def robots():
     return PlainTextResponse('User-agent: *\nDisallow: /\n')
