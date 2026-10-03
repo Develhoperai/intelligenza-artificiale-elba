@@ -1,0 +1,18 @@
+{
+  "source": "https://github.com/guglielmo/geojson-italy/blob/ba3347df3a53352891109f8198c597a0273684c0/geojson/limits_IT_regions.geojson",
+  "source_sha256": "97e9dc4c8ddb83e1d32c9f75f2007f7410f233e465cb529c6f8cf6f5ac488b0f",
+  "attribution": "ISTAT, elaborazione geojson-italy; adattamento SVG Intelligenza Artificiale Elba",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_coordinates": 477,
+  "bounds_wgs84": [
+    10.103175501933428,
+    42.70772643298371,
+    10.442206574270307,
+    42.87325284502459
+  ],
+  "projection": "Equirectangular local, longitude corrected by cos(42.79°); north up",
+  "asset_sha256": "f7d42296dbb2bc38b11437b046fb501549ca8282a42b8afa965f5338bb0d711e",
+  "path_sha256": "62a2a638b2505931674b8ee0516d7a1cc9d9e6485484cd77ddcee2d5928f8588",
+  "no_freehand_or_AI_geometry": true
+}

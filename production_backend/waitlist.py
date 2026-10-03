@@ -2,6 +2,7 @@
 
 import re
 import secrets
+import unicodedata
 from datetime import timedelta
 from typing import Literal
 
@@ -24,6 +25,8 @@ MESSAGE = "Richiesta ricevuta. Se i recapiti non erano già presenti, sei nella 
 
 class Signup(BaseModel):
     model_config = ConfigDict(extra="forbid")
+    first_name: str = Field(min_length=1, max_length=100)
+    last_name: str = Field(min_length=1, max_length=100)
     email: str = Field(min_length=5, max_length=254)
     phone: str = Field(min_length=8, max_length=40)
     privacy_ack: StrictBool
@@ -33,6 +36,18 @@ class Signup(BaseModel):
     consent_version: str = Field(max_length=60)
     token: str = Field(min_length=32, max_length=100)
     website: str = Field(default="", max_length=200)
+
+    @field_validator("first_name", "last_name")
+    @classmethod
+    def valid_name(cls, value):
+        # Preserve international names, accents and apostrophes. Reject invisible
+        # controls before normalizing ordinary spaces; names never enter AI context.
+        if any(unicodedata.category(char).startswith("C") for char in value):
+            raise ValueError("Inserisci nome e cognome senza caratteri di controllo")
+        value = unicodedata.normalize("NFC", " ".join(value.split()))
+        if not value or not any(char.isalpha() for char in value):
+            raise ValueError("Inserisci nome e cognome")
+        return value
 
     @field_validator("email")
     @classmethod
@@ -124,6 +139,8 @@ def subscribe(session, body):
         }
         entry = WaitlistEntry(
             mission_id=policy.document["mission_ref"],
+            first_name=body.first_name,
+            last_name=body.last_name,
             email=body.email,
             phone=body.phone,
             preference_hash=auth.token_hash(preference_token),

@@ -2,7 +2,7 @@
 
 Codice del sito pubblico: https://intelligenzaartificialeelba.it
 
-Brand definitivo: **Intelligenza Artificiale Elba**. Pubblico: titolari e team delle imprese dell'Isola d'Elba. Il percorso da promuovere ora è **il primo evento di formazione gratuito**. La CTA invita alla lista d'attesa con email e telefono. Data e luogo sono in preparazione; la lista non prenota un posto.
+Brand definitivo: **Intelligenza Artificiale Elba**. Pubblico: titolari e team delle imprese dell'Isola d'Elba. Il percorso da promuovere ora è **il primo evento di formazione gratuito**. La CTA invita alla lista d'attesa con nome, cognome, email e telefono. Data e luogo sono in preparazione; la lista non prenota un posto.
 
 ## Avviare l'anteprima
 
@@ -22,13 +22,14 @@ Apri http://127.0.0.1:8080. L'anteprima è completa per homepage, sei pagine sec
 - `content.json`: contenuti pubblici approvati che alimentano il template.
 - `static/company-site.css`: direzione visiva e responsive.
 - `static/company-site.js`: video, pausa, carico di lavoro, interazioni.
-- `static/experience-3d.js`: scene 3D continue lungo tutta la homepage.
+- `static/experience-3d.js`: tre scene 3D (scrivania disordinata, aula, scrivania ordinata), confinate nelle finestre narrative.
+- `static/elba-outline.svg`, `static/elba-outline-source.json`: sagoma reale dell’Elba da dati ISTAT / geojson-italy, licenza CC BY 4.0 con provenienza e hash.
 - `static/vendor/threejs/`: Three.js locale con licenza originale.
 - `static/media/`: foto originale, WebP responsive e video ottimizzati.
 - `static/brand-assets/`: wordmark e simbolo forniti dal titolare.
 - `static/waitlist.js`: invio e gestione errori del modulo.
 - `templates/company-privacy.html`, `templates/waitlist-preferences.html`: informativa e gestione consensi.
-- `production_backend/`: codice canonico del salvataggio, modello PostgreSQL, migrazione e route reali, esportati dal progetto protetto. Questi file si integrano con transazioni, audit, autenticazione e autorizzazione del progetto principale; non costituiscono un secondo server di produzione.
+- `production_backend/`: codice canonico del salvataggio, modello PostgreSQL, migrazioni 0008/0009 e route reali, esportati dal progetto protetto. Questi file si integrano con transazioni, audit, autenticazione e autorizzazione del progetto principale; non costituiscono un secondo server di produzione.
 
 Il repository permette a un'altra AI di modificare il sito senza accesso alle credenziali, ai contatti raccolti, alla dashboard o alle copie di sicurezza. Per portare le modifiche in produzione, trasferire i template e gli asset nel progetto principale, mantenendo il contratto del modulo e verificando il risultato prima del rilascio. Il push qui **non modifica automaticamente il sito online**.
 
@@ -36,9 +37,9 @@ Il repository permette a un'altra AI di modificare il sito senza accesso alle cr
 
 `GET /azienda/lista-attesa/token` → token breve e versione consensi.
 
-`POST /azienda/lista-attesa` JSON: `email`, `phone`, `privacy_ack`, `event_contact`, `marketing_email`, `marketing_phone`, `consent_version`, `token`, `website` (honeypot vuoto).
+`POST /azienda/lista-attesa` JSON: `first_name`, `last_name`, `email`, `phone`, `privacy_ack`, `event_contact`, `marketing_email`, `marketing_phone`, `consent_version`, `token`, `website` (honeypot vuoto).
 
-`privacy_ack` e `event_contact` sono richiesti. Marketing email e telefono/SMS sono distinti, facoltativi, inizialmente falsi. Il server normalizza, valida, impedisce duplicati e conserva la ricevuta dei consensi. Un invio ripetuto non aggiorna i consensi di un'altra persona. La risposta contiene un link personale con token nel frammento URL: non finisce nei registri di navigazione. Revoca o cancellazione: `POST /azienda/preferenze` con `token` e `action` (`withdraw_marketing` o `delete`).
+`privacy_ack` e `event_contact` sono richiesti. Marketing email e telefono/SMS sono distinti, facoltativi, visibili subito e inizialmente falsi. Il server normalizza, valida, impedisce duplicati e conserva la ricevuta dei consensi. Un invio ripetuto non aggiorna i consensi di un'altra persona. La risposta contiene un link personale con token nel frammento URL: non finisce nei registri di navigazione. Revoca o cancellazione: `POST /azienda/preferenze` con `token` e `action` (`withdraw_marketing` o `delete`).
 
 I recapiti restano privati; agli agenti arrivano solo conteggi. Nessuna email, telefonata, prenotazione o iscrizione a pagamento viene generata dal modulo. Non cambiare nomi dei campi, consensi o garanzie della privacy per un ritocco grafico.
 
@@ -49,3 +50,9 @@ Esperienza cinematografica sull'intera pagina: foto formativa e video sottile ne
 Verificare almeno desktop 1440 px, mobile 390 px e 360 px; assenza di overflow ed errori; CTA raggiungibile; caselle marketing non selezionate; video/3D sospesi quando non visibili; preferenze di movimento rispettate. Il calcolo del carico resta nel browser e non promette risparmi.
 
 Gli asset del brand e la fotografia sono forniti dal titolare; il video è una rielaborazione AI e non documenta un evento passato. Conservare le licenze dei componenti di terze parti (Three.js e Archivo).
+
+## Revisione del 3 ottobre 2026
+
+Il messaggio principale è esplicito: **Formazione AI gratuita per le imprese dell’Elba.** Il video originale compare nella sola hero. Programma e iscrizione precedono i servizi successivi; il calcolatore è un esercizio facoltativo e compatto. La homepage usa copy editoriale nel template: i testi storici di `content.json` non devono sostituire il messaggio gratuito né la geografia. Il contenuto delle sei pagine progetto resta nel JSON. Le tre animazioni sono scene 3D stilizzate, non nuovi filmati fotorealistici.
+
+Preservare la verifica del modulo e la migrazione additiva: i vecchi iscritti restano validi con nome/cognome da confermare, mentre le nuove richieste includono quattro campi. La sagoma geografica deriva dal poligono dell’Elba nei confini ISTAT distribuiti da [geojson-italy](https://github.com/guglielmo/geojson-italy); adattamento SVG con nord in alto e proporzioni geografiche preservate, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

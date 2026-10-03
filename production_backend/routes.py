@@ -74,6 +74,8 @@ def founder_waitlist(request: Request):
             "entries": [
                 {
                     "id": row.id,
+                    "first_name": row.first_name,
+                    "last_name": row.last_name,
                     "email": row.email,
                     "phone": row.phone,
                     "created_at": row.created_at.isoformat(),

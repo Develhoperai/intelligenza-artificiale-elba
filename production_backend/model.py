@@ -1,6 +1,8 @@
 class WaitlistEntry(Record, Base):
     __tablename__ = "waitlist_entries"
     mission_id: Mapped[str] = mapped_column(ForeignKey("missions.id"), index=True)
+    first_name: Mapped[str | None] = mapped_column(String(100))
+    last_name: Mapped[str | None] = mapped_column(String(100))
     email: Mapped[str] = mapped_column(String(254), unique=True)
     phone: Mapped[str] = mapped_column(String(16))
     preference_hash: Mapped[str] = mapped_column(String(64), unique=True)

@@ -3,7 +3,7 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const world = document.querySelector('[data-experience]');
   const toggle = document.querySelector('.scene-toggle');
-  const photos = [...document.querySelectorAll('.hero-photo,.meeting-photo,.contact-photo')];
+  const photos = [...document.querySelectorAll('.hero-photo')];
   const video = document.querySelector('.hero-video');
   const saveData = Boolean(navigator.connection?.saveData);
   let stopped = false, ticking = false;
@@ -56,7 +56,7 @@
     const start = () => {
       if (started) return;
       started = true;
-      import('/static/experience-3d.js?v=elba14').then(module => module.startExperience(world)).catch(() => {
+      import('/static/experience-3d.js?v=elba16').then(module => module.startExperience(world)).catch(() => {
         world.dataset.sceneState = 'fallback';
       });
     };
@@ -64,7 +64,9 @@
       const loader = new IntersectionObserver(entries => {
         if (entries.some(e => e.isIntersecting)) { loader.disconnect(); start(); }
       }, { rootMargin: '160px' });
-      loader.observe(world);
+      const firstScene = world.querySelector('[data-scene-viewport]');
+      if (firstScene) loader.observe(firstScene);
+      else world.dataset.sceneState = 'static';
     } else start();
   } else if (world) {
     world.dataset.sceneState = 'static';

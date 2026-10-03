@@ -7,3 +7,5 @@ Applica una direzione cinematografica coerente a tutta la pagina e verifica il r
 Il backend di produzione rimane nel progetto protetto. Puoi consultare il codice canonico in production_backend, ma un ritocco visuale non deve cambiare i contratti, indebolire l'autenticazione, rendere obbligatorio il marketing o inviare i recapiti ai modelli AI. L'anteprima non salva iscrizioni. Non inserire chiavi, dati degli iscritti, backup o credenziali nel repository.
 
 Consegna un diff verificabile con istruzioni per reintegrare template/asset e controlli eseguiti; non dichiarare un deploy perché hai fatto push a questo repository.
+
+Il titolo della home deve rendere subito evidente formazione gratuita, imprese e Isola d’Elba. Non sostituirlo con una metafora del pain. Il modulo include `first_name`, `last_name`, `email`, `phone`; mostra tutti i consensi senza accordioni. I due consensi marketing restano facoltativi e non preselezionati. La sagoma Elba deriva dall’asset geografico verificato: non ridisegnarla a intuito o con AI.
