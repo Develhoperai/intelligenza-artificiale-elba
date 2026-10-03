@@ -9,7 +9,6 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const narrow = matchMedia('(max-width: 60rem)');
   const saveData = Boolean(navigator.connection?.saveData);
-  const toggle = document.querySelector('.scene-toggle');
   const video = document.querySelector('.hero-video');
   const header = document.querySelector('[data-header]');
   const version = document.querySelector('.stage-canvas')?.dataset.assetVersion || '';
@@ -24,7 +23,7 @@
   const peakEnd = world.querySelector('[data-peak-end]');
 
   // Shared with the 3D module. Values are smoothed scroll progress, 0..1.
-  const state = { hero: 0, chaos: 0, peak: 0, door: 0, time: 0, paused: false, covered: false, project: world.dataset.experience === 'project', narrow: narrow.matches };
+  const state = { hero: 0, chaos: 0, peak: 0, door: 0, time: 0, covered: false, project: world.dataset.experience === 'project', narrow: narrow.matches };
   const target = { hero: 0, chaos: 0, peak: 0, door: 0 };
   let motion = !reduced.matches;
   let stage = null, raf = 0, last = 0, activeStep = -2;
@@ -72,7 +71,7 @@
     if (!video) return;
     const hero = scenes.hero?.getBoundingClientRect();
     const visible = hero && hero.bottom > 0 && hero.top < innerHeight;
-    if (state.paused || reduced.matches || saveData || document.hidden || !visible) { video.pause(); return; }
+    if (reduced.matches || saveData || document.hidden || !visible) { video.pause(); return; }
     if (!video.getAttribute('src')) video.src = narrow.matches ? video.dataset.sourceSmall : video.dataset.sourceWide;
     video.hidden = false;
     video.play().catch(() => { video.hidden = true; });
@@ -124,14 +123,13 @@
     if (document.hidden) return;
     measure();
     const k = 1 - Math.exp(-dt * 7); // ≈0.4 s of scrub smoothing
-    let moving = false;
     for (const key in target) {
       const delta = target[key] - state[key];
-      if (Math.abs(delta) > 0.0002) { state[key] += delta * k; moving = true; } else state[key] = target[key];
+      if (Math.abs(delta) > 0.0002) state[key] += delta * k; else state[key] = target[key];
     }
-    if (!state.paused) state.time += dt;
+    state.time += dt;
     direct();
-    if (stage && !state.covered && (moving || !state.paused)) stage.render(state);
+    if (stage && !state.covered) stage.render(state);
   };
 
   const stopMotion = () => {
@@ -142,7 +140,6 @@
     world.dataset.sceneState = 'static';
     document.querySelector('.stage')?.classList.remove('is-ready');
     if (video) { video.pause(); video.hidden = true; }
-    if (toggle) toggle.hidden = true;
   };
 
   const rollSectors = () => {
@@ -156,7 +153,6 @@
     root.classList.add('motion');
     rollSectors();
     armReveals();
-    if (toggle) toggle.hidden = false;
     last = performance.now();
     raf = requestAnimationFrame(frame);
     playVideo();
@@ -167,7 +163,7 @@
         stage = instance;
         world.dataset.sceneTier = instance.tier;
         world.dataset.sceneDpr = String(instance.dpr);
-        world.dataset.sceneState = state.paused ? 'paused' : 'running';
+        world.dataset.sceneState = 'running';
         document.querySelector('.stage')?.classList.add('is-ready');
       })
       .catch(() => { world.dataset.sceneState = 'fallback'; });
@@ -184,16 +180,6 @@
     window.open(`https://wa.me/${whatsapp.dataset.whatsapp}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
   });
 
-  toggle?.addEventListener('click', () => {
-    state.paused = !state.paused;
-    root.dataset.scenePaused = String(state.paused);
-    if (stage) world.dataset.sceneState = state.paused ? 'paused' : 'running';
-    toggle.setAttribute('aria-pressed', String(state.paused));
-    const label = state.paused ? 'Riprendi le animazioni' : 'Ferma le animazioni';
-    toggle.setAttribute('aria-label', label);
-    toggle.querySelector('span').textContent = label;
-    playVideo();
-  });
   document.addEventListener('visibilitychange', playVideo);
   if ('IntersectionObserver' in window && scenes.hero) new IntersectionObserver(playVideo).observe(scenes.hero);
   narrow.addEventListener('change', () => { state.narrow = narrow.matches; stage?.resize(); });

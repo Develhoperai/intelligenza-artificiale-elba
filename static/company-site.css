@@ -89,9 +89,15 @@ h3{font-stretch:112%;font-weight:700;line-height:1.15;letter-spacing:-.01em}
 .stage-still{position:absolute;right:4vw;top:50%;width:min(52vw,46rem);height:auto;transform:translateY(-50%);opacity:0;filter:invert(1) brightness(1.6) drop-shadow(0 0 2.5rem oklch(0.8 0.135 232 / .55))}
 body:has([data-scene-state="static"]) .stage-still,body:has([data-scene-state="fallback"]) .stage-still{opacity:.2}
 main{position:relative;z-index:1}
-.scene-toggle{position:fixed;right:1rem;bottom:1rem;z-index:45;display:inline-flex;align-items:center;gap:.5rem;padding:.55rem .9rem;border:1px solid var(--rule-dark);border-radius:99rem;background:oklch(0.19 0.058 256 / .8);color:var(--foam);font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}
-.scene-toggle[hidden]{display:none}
-.scene-toggle svg{width:1rem;height:1rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.consent{position:fixed;left:1rem;right:1rem;bottom:1rem;z-index:70;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.9rem 2rem;max-width:58rem;margin-inline:auto;padding:1rem 1.25rem;background:var(--sea-2);color:var(--foam);border:1px solid var(--rule-dark);border-radius:1rem;box-shadow:0 1rem 3rem oklch(0.1 0.04 256 / .6);font-size:.9rem;line-height:1.45}
+.consent[hidden]{display:none}
+.consent p{flex:1 1 22rem;max-width:62ch}
+.consent a{color:var(--glow-strong)}
+.consent-actions{display:flex;gap:.6rem}
+.consent-actions button{padding:.65rem 1.2rem;border:1px solid var(--glow);border-radius:99rem;background:transparent;color:var(--foam);font:inherit;font-weight:700;cursor:pointer}
+.footer-links{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;align-items:center}
+.footer-links button{padding:0;border:0;background:none;color:inherit;font:inherit;text-decoration:underline;cursor:pointer}
+.footer-links button[hidden]{display:none}
 
 /* auteur-allow: AI_GRADIENT -- every gradient here is a legibility scrim: the single sea colour at falling alpha, never a hue-to-hue blend */
 /* scene 1 — hook: the workshop film */
@@ -291,7 +297,6 @@ form .button{justify-self:start;padding:.8rem 1.25rem;font-size:.95rem}
 
 /* the page's one marquee: the sectors roll past; without motion they wrap as a plain list */
 .motion .sectors-track.is-rolling{flex-wrap:nowrap;width:max-content;padding-inline:0;animation:sectors 48s linear infinite}
-[data-scene-paused="true"] .sectors-track{animation-play-state:paused}
 @keyframes sectors{to{transform:translateX(-50%)}}
 /* reveal family 1 — headings rise word by word out of a mask */
 .motion [data-split] .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.12em;margin-bottom:-.12em}
@@ -332,7 +337,6 @@ form .button{justify-self:start;padding:.8rem 1.25rem;font-size:.95rem}
   .geo-credit{justify-self:start;text-align:left}
   .form-fields{grid-template-columns:1fr}
   .stage-still{right:50%;top:26%;width:86vw;transform:translate(50%,-50%)}
-  .scene-toggle span{display:none}
 }
 @media (max-height:44rem){
   .hero-copy{padding-top:6.5rem;padding-bottom:1.2rem;gap:.7rem}

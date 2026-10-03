@@ -1,5 +1,6 @@
 """Portable website preview. Production form processing remains on the protected VPS."""
 import json
+import os
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -11,6 +12,8 @@ ROOT = Path(__file__).resolve().parent
 app = FastAPI(docs_url=None, redoc_url=None)
 app.mount('/static', StaticFiles(directory=ROOT / 'static'), name='static')
 templates = Environment(loader=FileSystemLoader(ROOT / 'templates'), autoescape=select_autoescape())
+# Preview only: set ANALYTICS_ID=G-XXXXXXX to see the consent banner. Production reads its own setting.
+templates.globals['analytics'] = lambda: os.environ.get('ANALYTICS_ID', '')
 
 
 def context():
