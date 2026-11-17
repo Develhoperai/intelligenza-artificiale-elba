@@ -15,7 +15,7 @@
    let response;try{response=await fetch('/azienda/lista-attesa',{method:'POST',credentials:'omit',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),signal:controller.signal});}finally{clearTimeout(timeout);}
    const result=await response.json();
    if(!response.ok){if(response.status===422)challenge=null;throw Error(typeof result.detail==='string'?result.detail:(result.error||'Controlla nome, cognome, email, telefono e consensi. I dati restano nel modulo.'));}
-   submitted=true;status.textContent=result.message;button.textContent='Richiesta ricevuta';
+   submitted=true;if(window.gtag)window.gtag('event','generate_lead',{form_id:form.id,page_location:location.href});status.textContent=result.message;button.textContent='Richiesta ricevuta';
    const preferences=document.getElementById('waitlist-preferences');preferences.href=result.preference_url;preferences.hidden=false;
   }catch(error){status.textContent=error.name==='AbortError'?'Risposta non confermata. Premi di nuovo: la richiesta non verrà duplicata.':error.message;button.disabled=false;}
  });
